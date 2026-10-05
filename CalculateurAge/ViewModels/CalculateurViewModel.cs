@@ -32,6 +32,7 @@ public class CalculateurViewModel : BaseViewModel
         get => _statut;
         set => SetField(ref _statut, value);
     }
+    public RelayCommand EffacerCommand { get; }
     public string Resultat
     {
         get => _resultat;
@@ -46,12 +47,20 @@ public class CalculateurViewModel : BaseViewModel
 
     // Lié à Button.Command dans le XAML.
     public RelayCommand CalculerCommand { get; }
-
+    private void Effacer()
+    {
+        Nom = "";
+        DateNaissance = DateTime.Today.AddYears(-20);
+        Resultat = "";
+        Statut = "";
+        ResultatVisible = false;
+    }
     public CalculateurViewModel()
     {
         CalculerCommand = new RelayCommand(
             Calculer,
             () => !string.IsNullOrWhiteSpace(Nom));
+        EffacerCommand = new RelayCommand(Effacer);
     }
 
     // La logique métier : aucun contrôle d'interface ici.
