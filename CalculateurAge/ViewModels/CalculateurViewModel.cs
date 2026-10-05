@@ -11,6 +11,9 @@ public class CalculateurViewModel : BaseViewModel
         = DateTime.Today.AddYears(-20);
     private string _resultat = "";
     private bool _resultatVisible;
+    private string _joursRestants = "";
+
+
 
     // Propriétés publiques : ce que le XAML voit.
     public string Nom
@@ -51,7 +54,11 @@ public class CalculateurViewModel : BaseViewModel
                 OnPropertyChanged(nameof(ErreurVisible));
         }
     }
-
+    public string JoursRestants
+    {
+        get => _joursRestants;
+        set => SetField(ref _joursRestants, value);
+    }
     public bool ErreurVisible => !string.IsNullOrEmpty(Erreur);
     public RelayCommand EffacerCommand { get; }
     public string Resultat
@@ -76,6 +83,15 @@ public class CalculateurViewModel : BaseViewModel
         Statut = "";
         ResultatVisible = false;
     }
+    private static DateTime ProchainAnniversaire(DateTime naissance)
+    {
+        DateTime Pour(int an) => new DateTime(an, naissance.Month,
+            Math.Min(naissance.Day, DateTime.DaysInMonth(an, naissance.Month)));
+
+        var prochain = Pour(DateTime.Today.Year);
+        if (prochain < DateTime.Today) prochain = Pour(DateTime.Today.Year + 1);
+        return prochain;
+    }
     public CalculateurViewModel()
     {
         CalculerCommand = new RelayCommand(
@@ -96,6 +112,10 @@ public class CalculateurViewModel : BaseViewModel
 
         Resultat = $"{Nom}, vous avez {age} ans";
         Statut = age >= 18 ? "Majeur" : "Mineur";
+        int jours = (ProchainAnniversaire(DateNaissance) - DateTime.Today).Days;
+        JoursRestants = jours == 0
+            ? "Joyeux anniversaire !"
+            : $"Prochain anniversaire dans {jours} jour(s)";
         ResultatVisible = true;
     }
 }
