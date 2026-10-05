@@ -6,6 +6,7 @@ public class CalculateurViewModel : BaseViewModel
     // Champs privés : la vraie donnée.
     private string _nom = "";
     private string _statut = "";
+    private string _erreur = "";
     private DateTime _dateNaissance
         = DateTime.Today.AddYears(-20);
     private string _resultat = "";
@@ -25,13 +26,33 @@ public class CalculateurViewModel : BaseViewModel
     public DateTime DateNaissance
     {
         get => _dateNaissance;
-        set => SetField(ref _dateNaissance, value);
+        set
+        {
+            if (SetField(ref _dateNaissance, value))
+            {
+                Erreur = value.Date > DateTime.Today
+                    ? "La date de naissance ne peut pas être dans le futur"
+                    : "";
+                CalculerCommand.Rafraichir();
+            }
+        }
     }
     public string Statut
     {
         get => _statut;
         set => SetField(ref _statut, value);
     }
+    public string Erreur
+    {
+        get => _erreur;
+        set
+        {
+            if (SetField(ref _erreur, value))
+                OnPropertyChanged(nameof(ErreurVisible));
+        }
+    }
+
+    public bool ErreurVisible => !string.IsNullOrEmpty(Erreur);
     public RelayCommand EffacerCommand { get; }
     public string Resultat
     {
@@ -59,7 +80,9 @@ public class CalculateurViewModel : BaseViewModel
     {
         CalculerCommand = new RelayCommand(
             Calculer,
-            () => !string.IsNullOrWhiteSpace(Nom));
+            () => !string.IsNullOrWhiteSpace(Nom)
+                  && DateNaissance.Date <= DateTime.Today);
+
         EffacerCommand = new RelayCommand(Effacer);
     }
 
