@@ -1,38 +1,14 @@
-﻿using CalculateurAge.Views;
+﻿using CalculateurAge.ViewModels;
 
-namespace CalculateurAge
+namespace CalculateurAge;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    public MainPage()
     {
-        int count = 0;
-
-        public MainPage()
-        {
-            InitializeComponent();
-        }
-
-        private async void OnCalculerClicked(object sender, EventArgs e)
-        {
-            // Validation : on refuse un nom vide.
-            if (string.IsNullOrWhiteSpace(entryNom.Text))
-            {
-                DisplayAlert("Erreur", "Entrez un nom", "OK");
-                return;
-            }
-
-            if (!pickerDate.Date.HasValue)
-            {
-                DisplayAlert("Erreur", "Sélectionnez une date", "OK");
-                return;
-            }
-            DateTime d = pickerDate.Date.Value;
-            int age = DateTime.Today.Year - d.Year;
-            // Si l'anniversaire n'est pas encore passé cette année, on retire une année.
-            if (d.Date > DateTime.Today.AddYears(-age)) age--;
-
-            // On écrit directement dans les contrôles
-            await Shell.Current.GoToAsync(
-                $"{nameof(ResultatPage)}?nom={entryNom.Text}&age={age}");
-        }
+        InitializeComponent();
+        // Objet dans lequel tous les {Binding} de la page
+        // vont chercher leurs valeurs.
+        BindingContext = new CalculateurViewModel();
     }
 }
