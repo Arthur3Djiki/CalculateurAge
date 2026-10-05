@@ -18,6 +18,14 @@
             <Label Text="{Binding Resultat}" FontSize="20"
                IsVisible="{Binding ResultatVisible}"
                />
+            <Label Text="Historique" FontAttributes="Bold"/>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Historique}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding .}"/>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
             <Label Text="{Binding Statut}" FontSize="18" FontAttributes="Bold"
        IsVisible="{Binding ResultatVisible}"/>
             <Label Text="{Binding JoursRestants}"
