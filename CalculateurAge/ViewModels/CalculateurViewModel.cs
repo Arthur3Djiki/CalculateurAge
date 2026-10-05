@@ -5,6 +5,7 @@ public class CalculateurViewModel : BaseViewModel
 {
     // Champs privés : la vraie donnée.
     private string _nom = "";
+    private string _statut = "";
     private DateTime _dateNaissance
         = DateTime.Today.AddYears(-20);
     private string _resultat = "";
@@ -26,7 +27,11 @@ public class CalculateurViewModel : BaseViewModel
         get => _dateNaissance;
         set => SetField(ref _dateNaissance, value);
     }
-
+    public string Statut
+    {
+        get => _statut;
+        set => SetField(ref _statut, value);
+    }
     public string Resultat
     {
         get => _resultat;
@@ -58,6 +63,7 @@ public class CalculateurViewModel : BaseViewModel
             DateTime.Today.AddYears(-age)) age--;
 
         Resultat = $"{Nom}, vous avez {age} ans";
+        Statut = age >= 18 ? "Majeur" : "Mineur";
         ResultatVisible = true;
     }
 }
